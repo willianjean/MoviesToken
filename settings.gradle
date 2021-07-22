@@ -1,0 +1,2 @@
+rootProject.name = "MoviesToken"
+include ':app'
