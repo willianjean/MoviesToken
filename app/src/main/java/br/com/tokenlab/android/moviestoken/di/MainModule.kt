@@ -1,7 +1,7 @@
 package br.com.tokenlab.android.moviestoken.di
 
 import androidx.lifecycle.ViewModel
-import br.com.tokenlab.android.moviestoken.ui.HomeViewModel
+import br.com.tokenlab.android.moviestoken.viewmodel.HomeViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

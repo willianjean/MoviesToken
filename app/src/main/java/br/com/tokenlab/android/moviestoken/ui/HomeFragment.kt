@@ -10,13 +10,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import br.com.tokenlab.android.moviestoken.MainActivity
 import br.com.tokenlab.android.moviestoken.R
+import br.com.tokenlab.android.moviestoken.viewmodel.HomeViewModel
 import javax.inject.Inject
 
 class HomeFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel:HomeViewModel by viewModels<HomeViewModel>{ viewModelFactory }
+    private val viewModel: HomeViewModel by viewModels<HomeViewModel>{ viewModelFactory }
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity() as MainActivity).mainComponent.inject(this)

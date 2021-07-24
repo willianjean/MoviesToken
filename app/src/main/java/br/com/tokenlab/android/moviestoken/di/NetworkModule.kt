@@ -1,6 +1,7 @@
 package br.com.tokenlab.android.moviestoken.di
 
 import br.com.tokenlab.android.moviestoken.AppConstants
+import br.com.tokenlab.android.moviestoken.network.NetworkResponseApterFactory
 import br.com.tokenlab.android.moviestoken.network.TokenlabApi
 import dagger.Module
 import dagger.Provides
@@ -52,6 +53,7 @@ class  NetworkModule{
             .baseUrl(AppConstants.BASE_URL)
             //.client(loggingClient) //somente se precisar de autenticação
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(NetworkResponseApterFactory())
             .build()
     }
 
