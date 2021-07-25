@@ -1,6 +1,5 @@
 package br.com.tokenlab.android.moviestoken.network
 
-import br.com.tokenlab.android.moviestoken.network.model.dto.MoviesResponseDTOItem
 import retrofit2.Call
 import retrofit2.CallAdapter
 import retrofit2.Retrofit
@@ -24,7 +23,7 @@ class NetworkResponseApterFactory : CallAdapter.Factory() {
 
         val responseType = getParameterUpperBound(0, returnType)
 
-        if (getRawType(responseType) != NetworkReponse::class.java){
+        if (getRawType(responseType) != NetworkResponse::class.java){
             return null
         }
 

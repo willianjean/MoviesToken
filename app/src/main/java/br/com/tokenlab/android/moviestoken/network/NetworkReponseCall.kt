@@ -14,8 +14,8 @@ import java.lang.UnsupportedOperationException
 internal class NetworkReponseCall <S : Any, E : Any> (
     private val delegate: Call<S>,
     private val errorConverter: Converter<ResponseBody, E>
-) : Call<NetworkReponse<S, E>>{
-    override fun enqueue(callback: Callback<NetworkReponse<S, E>>) {
+) : Call<NetworkResponse<S, E>>{
+    override fun enqueue(callback: Callback<NetworkResponse<S, E>>) {
         return delegate.enqueue(object : Callback<S>{
             override fun onResponse(call: Call<S>, response: Response<S>) {
                 val body = response.body()
@@ -26,12 +26,12 @@ internal class NetworkReponseCall <S : Any, E : Any> (
                     if(body != null){
                         callback.onResponse(
                             this@NetworkReponseCall,
-                            Response.success(NetworkReponse.Success(body))
+                            Response.success(NetworkResponse.Success(body))
                         )
                     }else{
                         callback.onResponse(
                             this@NetworkReponseCall,
-                            Response.success(NetworkReponse.UnknownError())
+                            Response.success(NetworkResponse.UnknownError())
                         )
                     }
                 }else{
@@ -47,12 +47,12 @@ internal class NetworkReponseCall <S : Any, E : Any> (
                     if (errorBody != null){
                         callback.onResponse(
                             this@NetworkReponseCall,
-                            Response.success(NetworkReponse.ApiError(errorBody, code))
+                            Response.success(NetworkResponse.ApiError(errorBody, code))
                         )
                     }else{
                         callback.onResponse(
                             this@NetworkReponseCall,
-                            Response.success(NetworkReponse.UnknownError())
+                            Response.success(NetworkResponse.UnknownError())
                         )
                     }
                 }
@@ -60,8 +60,8 @@ internal class NetworkReponseCall <S : Any, E : Any> (
 
             override fun onFailure(call: Call<S>, t: Throwable) {
                 val networkReponse = when (t){
-                    is IOException -> NetworkReponse.NetworkError(t)
-                    else -> NetworkReponse.UnknownError()
+                    is IOException -> NetworkResponse.NetworkError(t)
+                    else -> NetworkResponse.UnknownError()
                 }
                 callback.onResponse(
                     this@NetworkReponseCall,
@@ -72,9 +72,9 @@ internal class NetworkReponseCall <S : Any, E : Any> (
         })
     }
 
-    override fun clone(): Call<NetworkReponse<S, E>> = NetworkReponseCall(delegate.clone(), errorConverter)
+    override fun clone(): Call<NetworkResponse<S, E>> = NetworkReponseCall(delegate.clone(), errorConverter)
 
-    override fun execute(): Response<NetworkReponse<S, E>> {
+    override fun execute(): Response<NetworkResponse<S, E>> {
         throw UnsupportedOperationException("NetworkResponseCall doesn't support execute")
     }
 

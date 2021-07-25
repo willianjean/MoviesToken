@@ -11,5 +11,5 @@ interface TokenlabApi {
     suspend fun getMovies(
         //@Path("id")
         //username: Double?
-    ): NetworkReponse<List<MoviesResponseDTOItem>, ErrorResponse>
+    ): NetworkResponse<List<MoviesResponseDTOItem>, ErrorResponse>
 }
