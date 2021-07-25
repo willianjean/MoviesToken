@@ -28,8 +28,8 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.home_fragment, container, false)
-        //viewModel.getMoviesList()
-        //return view
+//        viewModel.getMoviesList()
+//        return view
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
