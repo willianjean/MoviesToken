@@ -1,5 +1,7 @@
 package br.com.tokenlab.android.moviestoken.network.model.dto
 
+import java.io.Serializable
+
 data class MoviesResponseDTOItem(
     val id: Int,
     val vote_average: Double,

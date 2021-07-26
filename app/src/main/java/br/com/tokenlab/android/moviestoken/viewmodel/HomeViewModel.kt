@@ -6,13 +6,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.tokenlab.android.moviestoken.AppConstants
-import br.com.tokenlab.android.moviestoken.di.IoDispatcher
+import br.com.tokenlab.android.moviestoken.network.ErrorResponse
 import br.com.tokenlab.android.moviestoken.network.NetworkResponse
 import br.com.tokenlab.android.moviestoken.network.TokenlabApi
 import br.com.tokenlab.android.moviestoken.network.model.dto.MoviesResponseDTOItem
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
-import okhttp3.Dispatcher
+import java.io.IOException
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -20,8 +20,8 @@ val LOGTAG = "logrequest"
 // ---------------aqui não tem o parametro private val homeDataSource: HomeDataSouce pois eu so tenho uma requisição
 // como criar o view model sem o dataSource ta em 11:00 minutos do video 12 do curso
 class HomeViewModel @Inject constructor(val tokenlabApi: TokenlabApi /*, @IoDispatcher private val dispatcher: CoroutineDispatcher*/): ViewModel() {
-    private val _listOfMovies: MutableLiveData<List<MoviesResponseDTOItem>>? = MutableLiveData()
-    val listOfMovies: LiveData<List<MoviesResponseDTOItem>>? = _listOfMovies
+    private val _listOfMovies: MutableLiveData<List<MoviesResponseDTOItem>?> = MutableLiveData()
+    val listOfMovies: LiveData<List<MoviesResponseDTOItem>?> = _listOfMovies
 
     private val _errorMessage: MutableLiveData<String>? = MutableLiveData()
     val errorMessage: LiveData<String>? = _errorMessage
@@ -32,6 +32,10 @@ class HomeViewModel @Inject constructor(val tokenlabApi: TokenlabApi /*, @IoDisp
     private val _isLoading: MutableLiveData<Boolean>? = MutableLiveData()
     val isLoading: LiveData<Boolean>? = _isLoading
 
+    init {
+        getMoviesList()
+    }
+
     fun getMoviesList() {
         showErrorMessage(false)
         try {
@@ -40,9 +44,16 @@ class HomeViewModel @Inject constructor(val tokenlabApi: TokenlabApi /*, @IoDisp
                 when (response) {
                     is NetworkResponse.Success -> {
                         Log.d(LOGTAG, "Success")
-                        _listOfMovies?.value = response.body
-                        _isLoading?.value = false
-                        _errorMessageVisibility?.value = false
+
+//                        val trending
+//                        :Pair<List<List<MoviesResponseDTOItem>>?,
+//                                NetworkResponse<List<List<List<MoviesResponseDTOItem>>>, Error>?>
+
+                        //buildResponse(response.body,)
+
+                        _listOfMovies?.postValue(response.body)
+                        _isLoading?.postValue(false)
+                        _errorMessageVisibility?.postValue(false)
                     }
                     is NetworkResponse.ApiError -> {
                         Log.d(LOGTAG, "ApiError")
@@ -62,6 +73,29 @@ class HomeViewModel @Inject constructor(val tokenlabApi: TokenlabApi /*, @IoDisp
             throw e
         }
     }
+
+//    fun getListsOfMovies(homeResultCallback: (result: NetworkResponse<List<List<List<MoviesResponseDTOItem>>>, ErrorResponse>) -> Unit) {
+//
+//    }
+
+    //    private fun buildResponse(response: NetworkResponse<MoviesResponseDTOItem, Error>)
+//            : Pair<List<MoviesResponseDTOItem>?, NetworkResponse<List<List<MoviesResponseDTOItem>>, Error>?>
+//    {
+//        return when(response) {
+//            is NetworkResponse.Success -> {
+//                Pair(response.body, null)
+//            }
+//            is NetworkResponse.ApiError -> {
+//                Pair(null, NetworkResponse.ApiError(response.body, response.code))
+//            }
+//            is NetworkResponse.NetworkError -> {
+//                Pair(null, NetworkResponse.NetworkError(IOException()))
+//            }
+//            is NetworkResponse.UnknownError -> {
+//                Pair(null, NetworkResponse.UnknownError(Throwable()))
+//            }
+//        }
+//    }
 //        viewModelScope.launch {
 //            val response = tokenlabApi.getMovies()
 //            when(response){
@@ -81,8 +115,10 @@ class HomeViewModel @Inject constructor(val tokenlabApi: TokenlabApi /*, @IoDisp
 //        }
 //
     private fun showErrorMessage(show: Boolean, message: String? = null){
-        _isLoading?.value = !show
-        _errorMessageVisibility?.value = show
-        _errorMessage?.value = message
+        _isLoading?.postValue(!show)
+        _errorMessageVisibility?.postValue(show)
+        _errorMessage?.postValue(message)
     }
+
+
 }
